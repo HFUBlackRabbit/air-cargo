@@ -4,8 +4,8 @@
   "private": true,
   "main": "dist/index.html",
   "scripts": {
-    "start": "vue-cli-service serve",
-    "serve": "vue-cli-service serve",
+    "start": "yarn run serve",
+    "serve": "vue-cli-service serve --port=80 --https",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
