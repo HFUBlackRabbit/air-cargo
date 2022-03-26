@@ -13,48 +13,58 @@
   <main class="container">
     <div class="row calc">
       <div class="col s12 m8 offset-m2 l6 offset-l3 z-depth-2">
-        <div class="input-field col s12">
-          <select class="icons" v-model="plane">
-            <option :value="null" selected>Тип самолета</option>
-            <option v-for="item of planes" :key="item[0]" :data-icon="`/images/${item[1].image}.jpg`" :value="item[0]">
-              {{ item[1].type }}
-            </option>
-          </select>
-        </div>
-        <TransitionGroup>
-          <div class="col s12 row valign-wrapper" v-if="plane != null">
-            <div class="input-field col s2">
-              Вес
+        <v-select
+            v-model="plane"
+            :containerClass="['col s12']"
+            :options="planes"
+            label="Тип самолета"
+        />
+        <Transition>
+          <div v-if="plane != null">
+            <div class="col s12 row center-align">
+              <h6 style="margin-top: 0;">Отсеки</h6>
+              <v-checkbox
+                  :containerClass="['col', 's3']"
+                  v-for="[key, section] of sections"
+                  :label="section.name"
+                  :key="key"
+                  v-model="section.value"
+              />
             </div>
-            <div class="input-field col s10">
-              <input type="text" id="weight" :value="weight" class="validate" disabled>
-            </div>
-          </div>
-          <div class="input-field col s12 row center-align" v-if="plane != null">
-            <h6>Отсеки</h6>
-            <v-checkbox
-                :switchClass="['col', 's3']"
-                v-for="section of sections"
-                :label="section.name"
-                :key="section.name"
-                v-model="section.value"
+
+            <v-select
+                v-model.number="packageType"
+                :containerClass="['col s12']"
+                :options="packageTypes"
+                label="Тип упаковки"
             />
+
+            <div class="col s12 row valign-wrapper">
+              <label for="weight" class="input-field col s3">
+                Вес, кг
+              </label>
+              <div class="input-field col s9">
+                <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    :max="maxWeight"
+                    id="weight"
+                    class="validate"
+                    v-model="weight"
+                >
+              </div>
+            </div>
+
+            <div class="col s12">
+              <label>
+                <input type="checkbox" v-model="partialLoading">
+                <span>Частичная погрузка</span>
+              </label>
+            </div>
+
           </div>
-          <div class="input-field col s12" v-if="plane != null">
-            <select>
-              <option value="" disabled selected>Тип упаковки</option>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
-            </select>
-          </div>
-          <div class="col s12" v-if="plane != null">
-            <label>
-              <input type="checkbox" v-model="partialLoading">
-              <span>Частичная погрузка</span>
-            </label>
-          </div>
-        </TransitionGroup>
+        </Transition>
 
         <div class="col s12 row">
           <a :class="[
@@ -79,10 +89,45 @@
     </div>
 
     <!-- Modal Structure -->
-    <div id="modal" class="modal">
+    <div id="modal" class="modal s6">
       <div class="modal-content">
         <h4>Результат</h4>
-
+        <table class="responsive-table striped highlight">
+          <tbody>
+          <tr>
+            <td>Тип самолета</td>
+            <td>{{ planes.get(plane) }}</td>
+          </tr>
+          <tr>
+            <td>Вес</td>
+            <td>
+              {{ weight }}
+              /
+              {{ maxWeight }}
+            </td>
+          </tr>
+          <tr v-for="[key, section] of activeSections" :key="key">
+            <td>
+              {{ section.name }}
+            </td>
+            <td>
+              {{ Math.ceil(weight / activeSections.size) }}
+              /
+              {{ maxWeight / sections.size - Math.ceil(weight / activeSections.size) }}
+              /
+              {{ maxWeight / sections.size }}
+            </td>
+          </tr>
+          <tr v-if="packageType != null">
+            <td>Тип упаковки</td>
+            <td>{{ packageTypes.get(packageType) }}</td>
+          </tr>
+          <tr>
+            <td>Частичная погрузка</td>
+            <td>{{ partialLoading ? 'Да' : 'Нет' }}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
       <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
@@ -105,35 +150,44 @@ import materialCss from 'materialize-css';
 import Airplane from "@/Entity/Airplane";
 
 import vCheckbox from "@/components/v-checkbox"
+import vSelect from "@/components/v-select"
 
 export default {
   name: 'App',
   data() {
     return {
       plane: null,
-      sections: [
-        {
+      weight: 0,
+      sections: new Map([
+        [0, {
           name: 'Отсек A',
           value: false
-        },
-        {
+        }],
+        [1, {
           name: 'Отсек B',
           value: false
-        },
-        {
+        }],
+        [2, {
           name: 'Отсек C',
           value: false
-        },
-        {
+        }],
+        [3, {
           name: 'Отсек D',
           value: false
-        },
-      ],
+        }]
+      ]),
+      packageType: null,
+      packageTypes: new Map([
+        [0, 'Паллеты'],
+        [1, 'Мешки'],
+        [2, 'Ящики']
+      ]),
       partialLoading: false
     }
   },
   components: {
-    vCheckbox
+    vCheckbox,
+    vSelect
   },
   computed: {
     year() {
@@ -162,14 +216,38 @@ export default {
 
       return airplanes
     },
-    weight() {
+    maxWeight() {
       let planes = this.planes,
           plane = planes.has(this.plane) ? this.planes.get(this.plane) : null
-      console.log({planes}, this.plane, planes.get(this.plane))
       return plane ? plane.capacity : 0
+    },
+    activeSections() {
+      let active = new Map()
+      for (let [key, item] of this.sections) {
+        if (item.value) {
+          active.set(key, item)
+        }
+      }
+      return active
+    }
+  },
+  watch: {
+    weight() {
+      if (this.weight < 0) {
+        this.weight = 0
+      } else if (this.weight > this.maxWeight) {
+        this.weight = this.maxWeight
+      }
+
+      if (this.weight % 1 !== 0) {
+        this.weight = this.weight - (this.weight % 1)
+      }
     }
   },
   mounted() {
+    materialCss.AutoInit()
+  },
+  updated() {
     materialCss.AutoInit()
   }
 }

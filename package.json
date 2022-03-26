@@ -5,7 +5,7 @@
   "main": "dist/index.html",
   "scripts": {
     "start": "yarn run serve",
-    "serve": "vue-cli-service serve --port=80 --https",
+    "serve": "vue-cli-service serve --port=80",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },

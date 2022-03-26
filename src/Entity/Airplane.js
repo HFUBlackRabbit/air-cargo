@@ -42,6 +42,10 @@ class Airplane {
         this.image = image
         return this
     }
+
+    toString() {
+        return this.getType()
+    }
 }
 
 export default Airplane;
