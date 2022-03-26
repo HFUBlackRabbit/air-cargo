@@ -1,2 +1,37 @@
 @import "normalize-scss";
 @include normalize();
+
+@import "materialize-css/sass/materialize";
+@import "material-design-icons/iconfont/material-icons.css";
+
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("./assets/fonts/JetBrainsMono/JetBrainsMono-Regular.ttf");
+}
+
+
+#app {
+  font-family: JetBrains Mono, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.calc {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity .5s ease-in-out;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
