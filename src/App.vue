@@ -92,7 +92,7 @@
     <div id="modal" class="modal s6">
       <div class="modal-content">
         <h4>Результат</h4>
-        <table class="responsive-table striped highlight">
+        <table class="striped highlight">
           <tbody>
           <tr>
             <td>Тип самолета</td>
@@ -101,9 +101,17 @@
           <tr>
             <td>Вес</td>
             <td>
-              {{ weight }}
+              <span class="tooltip tooltipped" data-position="bottom" data-tooltip="Загружено">
+                {{ weight }}
+              </span>
               /
-              {{ maxWeight }}
+              <span class="tooltip tooltipped" data-position="bottom" data-tooltip="Свободно">
+                {{ maxWeight - weight }}
+              </span>
+              /
+              <span class="tooltip tooltipped" data-position="bottom" data-tooltip="Всего">
+                {{ maxWeight }}
+              </span>
             </td>
           </tr>
           <tr v-for="[key, section] of activeSections" :key="key">
@@ -111,11 +119,18 @@
               {{ section.name }}
             </td>
             <td>
-              {{ Math.ceil(weight / activeSections.size) }}
+
+              <span class="tooltip tooltipped" data-position="bottom" data-tooltip="Загружено">
+                {{ Math.ceil(weight / activeSections.size) }}
+              </span>
               /
-              {{ maxWeight / sections.size - Math.ceil(weight / activeSections.size) }}
+              <span class="tooltip tooltipped" data-position="bottom" data-tooltip="Свободно">
+                {{ maxWeight / sections.size - Math.ceil(weight / activeSections.size) }}
+              </span>
               /
-              {{ maxWeight / sections.size }}
+              <span class="tooltip tooltipped" data-position="bottom" data-tooltip="Всего">
+                {{ maxWeight / sections.size }}
+              </span>
             </td>
           </tr>
           <tr v-if="packageType != null">

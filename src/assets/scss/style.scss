@@ -1,6 +1,3 @@
-@import "normalize-scss";
-@include normalize();
-
 @import "materialize-css/sass/materialize";
 @import "material-design-icons/iconfont/material-icons.css";
 
@@ -38,4 +35,9 @@
 
 .modal {
   max-width: 500px !important;
+}
+
+.tooltip {
+  border-width: 0 0 1px;
+  border-style: dashed;
 }
