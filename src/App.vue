@@ -20,7 +20,7 @@
             :options="planes"
             label="Тип самолета"
         />
-        <Transition>
+        <TransitionGroup>
           <div v-if="plane != null">
             <div class="col s12 row center-align">
               <h6 style="margin-top: 0;">Отсеки</h6>
@@ -39,33 +39,31 @@
                 :options="packageTypes"
                 label="Тип упаковки"
             />
-
-            <div class="col s12 row valign-wrapper">
-              <label for="weight" class="input-field col s3">
-                Вес, кг
-              </label>
-              <div class="input-field col s9">
-                <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    :max="maxWeight"
-                    id="weight"
-                    class="validate"
-                    v-model="weight"
-                >
-              </div>
-            </div>
-
-            <div class="col s12">
-              <label>
-                <input type="checkbox" v-model="partialLoading">
-                <span>Частичная погрузка</span>
-              </label>
-            </div>
-
           </div>
-        </Transition>
+          <div class="col s12 row valign-wrapper" v-if="plane != null && maxAvailableWeight > 0">
+            <label for="weight" class="input-field col s3">
+              Вес, кг
+            </label>
+            <div class="input-field col s9">
+              <input
+                  type="number"
+                  step="1"
+                  min="0"
+                  :max="maxAvailableWeight"
+                  id="weight"
+                  class="validate"
+                  v-model="weight"
+              >
+            </div>
+          </div>
+
+          <div class="col s12" v-if="plane != null">
+            <label>
+              <input type="checkbox" v-model="partialLoading">
+              <span>Частичная погрузка</span>
+            </label>
+          </div>
+        </TransitionGroup>
 
         <div class="col s12 row">
           <a :class="[
@@ -237,6 +235,9 @@ export default {
           plane = planes.has(this.plane) ? this.planes.get(this.plane) : null
       return plane ? plane.capacity : 0
     },
+    maxAvailableWeight() {
+      return this.maxWeight / 4 * this.activeSections.size
+    },
     activeSections() {
       let active = new Map()
       for (let [key, item] of this.sections) {
@@ -251,8 +252,8 @@ export default {
     weight() {
       if (this.weight < 0) {
         this.weight = 0
-      } else if (this.weight > this.maxWeight) {
-        this.weight = this.maxWeight
+      } else if (this.weight > this.maxAvailableWeight) {
+        this.weight = this.maxAvailableWeight
       }
 
       if (this.weight % 1 !== 0) {
