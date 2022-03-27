@@ -3,8 +3,9 @@
   <nav class="blue-grey darken-1">
     <div class="nav-wrapper">
       <div style="display: inline-flex; align-items: center; justify-content: center; width: 100%;">
-        <span style="font-size: 1rem">
-          Калькулятор для расчета нагрузки на оси самолета
+        <i class="material-icons">airplanemode_active</i>
+        <span style="font-size: 1.5rem">
+          Air Cargo
         </span>
       </div>
     </div>
@@ -145,7 +146,7 @@
         </table>
       </div>
       <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
+        <a href="#" class="modal-close waves-effect waves-green btn-flat">Закрыть</a>
       </div>
     </div>
   </main>
@@ -153,7 +154,7 @@
   <footer class="page-footer blue-grey darken-1">
     <div class="footer-copyright">
       <div class="container">
-        © {{ year }}
+        © 2022<span v-if="year > 2022">-{{ year }}</span> разработчик Юлия Макусь
       </div>
     </div>
   </footer>
