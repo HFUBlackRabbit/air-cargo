@@ -270,7 +270,7 @@ export default {
         this.weight = plane.capacity
       }
     },
-    sections() {
+    activeSections() {
       if (this.weight > this.maxAvailableWeight) {
         this.weight = this.maxAvailableWeight
       }
