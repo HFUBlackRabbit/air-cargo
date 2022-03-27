@@ -259,6 +259,21 @@ export default {
       if (this.weight % 1 !== 0) {
         this.weight = this.weight - (this.weight % 1)
       }
+    },
+    plane() {
+      let plane = this.planes.get(this.plane)
+      if (!plane) {
+        this.weight = 0
+      }
+
+      if (this.weight > plane.capacity) {
+        this.weight = plane.capacity
+      }
+    },
+    sections() {
+      if (this.weight > this.maxAvailableWeight) {
+        this.weight = this.maxAvailableWeight
+      }
     }
   },
   mounted() {
