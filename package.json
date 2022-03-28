@@ -2,8 +2,9 @@
   "name": "calc",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/index.html",
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port=80",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -19,8 +20,9 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0",
     "node-sass": "^7.0.1",
-    "normalize-scss": "^7.0.1",
     "sass": "^1.49.9",
     "sass-loader": "^12.6.0"
   },
