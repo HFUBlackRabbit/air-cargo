@@ -210,13 +210,13 @@ export default {
     planes() {
       let plains = [
         {
-          type: 'Боинг 737-400F',
+          type: 'Boeing 747-400F',
           image: 'boeing',
           sections: [],
           capacity: 128500
         },
         {
-          type: 'ИЛ-76МД-90А',
+          type: 'ИЛ-76ТД',
           image: 'il',
           sections: [],
           capacity: 60000
